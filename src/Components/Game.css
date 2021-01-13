@@ -1,3 +1,25 @@
+html{
+  background-image: url('https://wallpapercave.com/wp/v5eW6jf.jpg');
+  background-image: url('https://m.media-amazon.com/images/I/61IyOO-5VxL._AC_SL1134_.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+}
+
+
+div{
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.player-pig-container{
+  display: flex;
+  justify-content: space-evenly;
+  padding: 5px;
+  width: 150px;
+  align-items: center;
+}
+
 .paper{
   width: 800px;
   height: 300px;
@@ -6,6 +28,7 @@
   overflow: hidden;
   margin: auto;
   margin-top: 100px;
+  box-shadow: 0 0 5px white !important;
 }
 
 .dice-container{
@@ -13,12 +36,10 @@
   align-items: center;
   justify-content: space-evenly;
   height: 50px;
-  border: 2px solid black;
 }
 
 .player1-side{
   width: 100%;
-  background-color: blue;
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -26,8 +47,12 @@
   justify-content: space-evenly;
 }
 
+h1{
+  font-size: 50px;
+}
 h2{
   margin: 0;
+  font-size: 40px;
 }
 
 h3{
@@ -41,7 +66,7 @@ p{
 .player2-side{
   width: 100%;
   padding: 10px;
-  background-color: teal;
+  /* background-color: teal; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -55,20 +80,20 @@ p{
   flex-direction: column;
   align-items: center;
   align-content: center;
-  background-color: orange;
+  border-radius: 5%;
+  background-color: rgb(69,19,28);
   justify-content: space-evenly;
   padding: 5px;
   margin: 15px;
-  
 }
 
 .current > p{
   margin: 0;
   font-size: 15px;
+  color: white;
 }
 
 .middle-container{
-  border: 2px solid black;
   padding: 10px;
   width: 600px;
   height: 300px;
@@ -91,7 +116,6 @@ p{
 .game-button-container{
   display: flex;
   flex-direction: column;
-  border: 2px solid black;
   height: 100px;
   justify-content: space-evenly;
   text-align: center;
