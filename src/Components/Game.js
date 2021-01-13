@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Paper, TextField, Button } from '@material-ui/core'
+import { Paper, Button, Typography } from '@material-ui/core'
 import './Game.css'
-import { BiDice1, BiDice2, BiDice3, BiDice4, BiDice5, BiDice6 } from 'react-icons/bi'
+// import { BiDice1, BiDice2, BiDice3, BiDice4, BiDice5, BiDice6 } from 'react-icons/bi'
 import { GiPig } from 'react-icons/gi'
 
 
@@ -22,45 +22,51 @@ export default function Game() {
   const [currentScore1, setCurrentScore1] = useState(0)
   const [currentScore2, setCurrentScore2] = useState(0)
 
-  const [targetScore, setTargetScore] = useState(100)
 
   const dieArray = [1, 2, 3, 4, 5, 6]
 
   const [die1, setDie1] = useState(0)
   const [die2, setDie2] = useState(0)
 
-  const [dieSum, setDieSum] = useState(0)
-
   const [oneHit, setOneHit] = useState(false)
 
   const [winnerState, setWinnerState] = useState(false)
+  const [winnerPlayer, setWinnerPlayer] = useState(1)
 
   useEffect(() => {
     setCurrentPlayer(1)
+    setCurrentScore1(0)
+    setCurrentScore2(0)
   }, [])
+
+  useEffect(() => {
+    if (player1Score >= 100) {
+      setWinnerPlayer(1)
+      setWinnerState(true)
+    } else if (player2Score >= 100) {
+      setWinnerPlayer(2)
+      setWinnerState(true)
+    }
+  }, [player1Score, player2Score])
 
 
   useEffect(() => {
-    setDieSum(die1 + die2)
     if (die1 === 1 || die2 === 1) {
-      console.log('1 hit')
       setOneHit(true)
+    } else if (currentPlayer === 1) {
+      setCurrentScore1((currentScore1 + (die1 + die2)))
+    } else {
+      setCurrentScore2((currentScore2 + (die1 + die2)))
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [die1, die2])
 
   function rollDice() {
     setDie1(dieArray[Math.floor(Math.random() * dieArray.length)])
     setDie2(dieArray[Math.floor(Math.random() * dieArray.length)])
 
-    if (currentPlayer === 1) {
-      setCurrentScore1((currentScore1 + dieSum))
-    } else if (currentPlayer === 2) {
-      setCurrentScore2((currentScore2 + dieSum))
-    }
   }
 
-  let player1
-  let player2
 
 
   function hold() {
@@ -68,32 +74,26 @@ export default function Game() {
     let score2 = (player2Score + currentScore2)
 
     if (currentPlayer === 1) {
-      if (player1Score >= targetScore) {
-        return winner(player1)
-      }
-      else {
-        console.log('Else Hit', 'Player 1')
-        setPlayer1Score(score1)
-        setCurrentScore1(0)
-        setCurrentPlayer(2)
-      }
+      setPlayer1Score(score1)
+      setCurrentScore1(0)
+      setCurrentPlayer(2)
     }
-
 
     if (currentPlayer === 2) {
-      if (player2Score >= targetScore) {
-        return winner(player2)
-      }
-      else {
-        console.log('Else Hit', 'Player 2')
-        setPlayer2Score(score2)
-        setCurrentScore2(0)
-        setCurrentPlayer(1)
-      }
+      setPlayer2Score(score2)
+      setCurrentScore2(0)
+      setCurrentPlayer(1)
     }
+
   }
 
   function newGame() {
+    setWinnerState(false)
+
+    setOneHit(false)
+    setDie1(0)
+    setDie2(0)
+
     setPlayer1Score(0)
     setPlayer2Score(0)
 
@@ -109,23 +109,20 @@ export default function Game() {
       setCurrentScore1(0)
       setCurrentPlayer(2)
       setOneHit(false)
+      setDie1(0)
+      setDie2(0)
     } else {
       setCurrentScore2(0)
       setCurrentPlayer(1)
       setOneHit(false)
+      setDie1(0)
+      setDie2(0)
     }
-  }
-
-
-  function winner() {
-    console.log('hit')
-    //Make Popup, and a button that says "choose starting player" that sets currentplayer and runs newgame()
   }
 
   return (
     <div>
       <Paper className="paper">
-
         <div className="player1-side">
           <div>
             {currentPlayer === 1 &&
@@ -143,20 +140,27 @@ export default function Game() {
         <div className="middle-container">
           <Button type='submit' variant='contained' onClick={() => newGame()}>New Game</Button>
           <div className="dice-container">
-            <p>{die1}</p>
-            <p>{die2}</p>
+            <h1>
+              {die1}
+              {/* <BiDice1 /> */}
+            </h1>
+            <h1>
+              {die2}
+              {/* <BiDice2 /> */}
+            </h1>
           </div>
-          {oneHit === false ?
+          {winnerState === true ? <Typography className="game-button-container">Winner is Player {winnerPlayer}!</Typography> :
             <div>
-              <Button type='submit' variant='contained' onClick={() => rollDice()}>Roll Dice</Button>
-              <Button type='submit' variant='contained' onClick={() => hold()}>Hold</Button>
-              <TextField id="filled-basic" label="Target Score" className="textfield" variant="filled" onChange={(e) => setTargetScore(e.target.value)} />
-            </div>
-
-            :
-            <div >
-              <Button type='submit' variant='contained' onClick={() => passThePigs()}>Pass the Pigs</Button>
-            </div>
+              {oneHit === false ?
+                <div className="game-button-container">
+                  <Button type='submit' variant='contained' onClick={() => rollDice()}>Roll Dice</Button>
+                  <Button type='submit' variant='contained' onClick={() => hold()}>Hold</Button>
+                </div>
+                :
+                <div className="game-button-container">
+                  <Button type='submit' variant='contained' onClick={() => passThePigs()}>Pass the Pigs</Button>
+                </div>
+              }</div>
           }
         </div>
         <div className="player2-side">
