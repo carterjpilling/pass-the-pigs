@@ -3,7 +3,6 @@ import { Paper, Button, Typography } from '@material-ui/core'
 import './Game.css'
 import { FaDiceOne, FaDiceTwo, FaDiceThree, FaDiceFour, FaDiceFive, FaDiceSix, FaDice } from 'react-icons/fa'
 import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai'
-import ReactGA from 'react-ga';
 
 export default function Game() {
   const [player1Score, setPlayer1Score] = useState(0)
