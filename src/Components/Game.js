@@ -1,18 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Paper, Button, Typography } from '@material-ui/core'
 import './Game.css'
-// import { BiDice1, BiDice2, BiDice3, BiDice4, BiDice5, BiDice6 } from 'react-icons/bi'
 import { FaDiceOne, FaDiceTwo, FaDiceThree, FaDiceFour, FaDiceFive, FaDiceSix, FaDice } from 'react-icons/fa'
-import { GiPig } from 'react-icons/gi'
-
-
-//How will I handle a user getting a '1' and passing it to the next player? Will there be a pass button?
-
-//Numbers are getting messed up after passing the pigs.
-//Pig needs to be larger
-
-
-
+import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai'
+import ReactGA from 'react-ga';
 
 export default function Game() {
   const [player1Score, setPlayer1Score] = useState(0)
@@ -23,16 +14,13 @@ export default function Game() {
   const [currentScore1, setCurrentScore1] = useState(0)
   const [currentScore2, setCurrentScore2] = useState(0)
 
-
   const dieArray = [1, 2, 3, 4, 5, 6]
 
   const [die1, setDie1] = useState(0)
   const [die2, setDie2] = useState(0)
 
-  // const [dice1, setDice1] = useState(FaDice)
-  // const [dice2, setDice2] = useState(FaDice)
-
   const [oneHit, setOneHit] = useState(false)
+  const [rulesOpen, setRulesOpen] = useState(false)
 
   const [winnerState, setWinnerState] = useState(false)
   const [winnerPlayer, setWinnerPlayer] = useState(1)
@@ -52,46 +40,6 @@ export default function Game() {
       setWinnerState(true)
     }
   }, [player1Score, player2Score])
-
-  // useEffect(() => {
-  //   console.log(dice1, 'beginning')
-  //   const FaDice = 0
-  //   const FaDiceOne = 1
-  //   const FaDiceTwo = 2
-  //   const FaDiceThree = 3
-  //   const FaDiceFour = 4
-  //   const FaDiceFive = 5
-  //   const FaDiceSix = 6
-
-  //   switch (die1) {
-  //     case FaDice:
-  //       setDice1(FaDice)
-  //       break
-  //     case FaDiceOne:
-  //       setDice1(FaDiceOne)
-  //       break
-  //     case FaDiceTwo:
-  //       setDice1(FaDiceTwo)
-  //       break
-  //     case FaDiceThree:
-  //       setDice1(FaDiceThree)
-  //       break
-  //     case FaDiceFour:
-  //       setDice1(FaDiceFour)
-  //       break
-  //     case FaDiceFive:
-  //       setDice1(FaDiceFive)
-  //       break
-  //     case FaDiceSix:
-  //       setDice1(FaDiceSix)
-  //       break
-  //     default:
-  //       return null
-  //   }
-
-  //   console.log(dice1, 'end')
-
-  // }, [die1])
 
   useEffect(() => {
     if (die1 === 1 || die2 === 1) {
@@ -167,13 +115,13 @@ export default function Game() {
   }
 
   return (
-    <div>
+    <div className="div-body">
       <Paper className="paper">
         <div className="player1-side">
           <div className='player-pig-container'>
             <h3>Player 1</h3>
             {currentPlayer === 1 &&
-              <GiPig color='rgb(69,19,28)' />
+              <FaDice color='rgb(69,19,28)' />
             }
           </div>
           <h2>{player1Score}</h2>
@@ -183,7 +131,17 @@ export default function Game() {
           </div>
         </div>
         <div className="middle-container">
-          <Button type='submit' variant='contained' onClick={() => newGame()}>New Game</Button>
+          <Button type='submit' variant='contained' onClick={() => newGame()}>
+            {winnerState === false ?
+              <Typography variant="subtitle1">
+                New Game
+            </Typography> :
+              <Typography>
+                Play Again!
+            </Typography>
+            }
+
+          </Button>
           <div className="dice-container">
             <h1>
               {die1 === 0 && <FaDice color='rgb(69,19,28)' />}
@@ -204,7 +162,7 @@ export default function Game() {
               {die2 === 6 && <FaDiceSix color='rgb(69,19,28)' />}
             </h1>
           </div>
-          {winnerState === true ? <Typography className="game-button-container">Winner is Player {winnerPlayer}!</Typography> :
+          {winnerState === true ? <Typography className="game-button-container">The Winner is Player {winnerPlayer}!</Typography> :
             <div>
               {oneHit === false ?
                 <div className="game-button-container">
@@ -213,7 +171,7 @@ export default function Game() {
                 </div>
                 :
                 <div className="game-button-container">
-                  <Button type='submit' variant='contained' onClick={() => passThePigs()}>Pass the Pigs</Button>
+                  <Button type='submit' variant='contained' onClick={() => passThePigs()}>Pass the Dice</Button>
                 </div>
               }</div>
           }
@@ -222,7 +180,7 @@ export default function Game() {
           <div className='player-pig-container'>
             <h3>Player 2</h3>
             {currentPlayer === 2 &&
-              <GiPig color='rgb(69,19,28)' />
+              <FaDice color='rgb(69,19,28)' />
             }
 
           </div>
@@ -233,6 +191,31 @@ export default function Game() {
           </div>
         </div>
       </Paper>
+      <Button type='submit' variant='contained' onClick={() => setRulesOpen(!rulesOpen)} className='rules'>
+
+        Rules
+        {rulesOpen === false ?
+          <AiOutlineArrowDown /> :
+          <AiOutlineArrowUp />
+        }
+      </Button>
+
+      {rulesOpen &&
+        <Paper className="paper-two">
+          <Typography>
+            1. The goal of the game is to be the first player to reach 100 points.
+          </Typography>
+          <Typography>
+            2. During your turn, you earn points by rolling the dice. Points from your turn can be added to your overall point total using the Hold button.
+          </Typography>
+          <Typography>
+            3. The dice are passed if either dice roll a '1.'
+          </Typography>
+          <Typography>
+            4. Will you be a player who goes for 100 in one turn, or the player who conservatively increments their score?
+          </Typography>
+        </Paper>
+      }
 
     </div >
   )

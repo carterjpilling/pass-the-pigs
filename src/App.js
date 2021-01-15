@@ -1,4 +1,8 @@
 import Game from './Components/Game'
+import ReactGA from 'react-ga';
+
+
+ReactGA.initialize('G-TK3CEES8CS')
 
 function App() {
   return (
