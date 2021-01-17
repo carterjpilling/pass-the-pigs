@@ -3,6 +3,7 @@ import { Paper, Button, Typography } from '@material-ui/core'
 import './Game.css'
 import { FaDiceOne, FaDiceTwo, FaDiceThree, FaDiceFour, FaDiceFive, FaDiceSix, FaDice } from 'react-icons/fa'
 import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai'
+import ReactGa from 'react-ga'
 
 export default function Game() {
   const [player1Score, setPlayer1Score] = useState(0)
@@ -52,6 +53,11 @@ export default function Game() {
   }, [die1, die2])
 
   function rollDice() {
+    ReactGa.event({
+      category: "Button",
+      action: "Roll Dice"
+    })
+
     setDie1(dieArray[Math.floor(Math.random() * dieArray.length)])
     setDie2(dieArray[Math.floor(Math.random() * dieArray.length)])
 
@@ -62,6 +68,11 @@ export default function Game() {
   function hold() {
     let score1 = (player1Score + currentScore1)
     let score2 = (player2Score + currentScore2)
+
+    ReactGa.event({
+      category: "Button",
+      action: "Hold the Dice"
+    })
 
     if (currentPlayer === 1) {
       setPlayer1Score(score1)
@@ -81,6 +92,10 @@ export default function Game() {
   }
 
   function newGame() {
+    ReactGa.event({
+      category: "Button",
+      action: "New Game"
+    })
     setWinnerState(false)
 
     setOneHit(false)
@@ -97,6 +112,10 @@ export default function Game() {
   }
 
   function passThePigs() {
+    ReactGa.event({
+      category: "Button",
+      action: "Pass the Dice"
+    })
 
     if (currentPlayer === 1) {
       setCurrentScore1(0)
